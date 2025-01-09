@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Multi-Stage Build로 경량화된 Next.js Docker 이미지
 
-## Getting Started
+이 프로젝트에서는 **Multi-Stage Build**를 활용하여 Next.js 애플리케이션을 경량화된 Docker 이미지로 빌드합니다. 
+또한, Next.js 공식 문서에서 소개하는 **Standalone 빌드** 방식을 사용하여 빌드 결과물의 용량을 최소화했습니다.
 
-First, run the development server:
+# Docker 개발 환경 가이드
 
+## 1. 빌드 (Build)
+
+### 개발 환경
+아래 명령어를 사용하여 개발 환경에서 이미지를 빌드합니다:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+docker build -t {{빌드할 Image 파일명}} -f ./Dockerfile . --build-arg ENV_MODE=development
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 운영 환경
+```bash
+docker build -t {{빌드할 Image 파일명}} -f ./Dockerfile . --build-arg ENV_MODE=production
+```
+### 예시
+```bash
+docker build -t docker-build-lab -f ./Dockerfile . --build-arg ENV_MODE=development
+```
+## 2. 실행
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+docker run -it --rm -p 3000:3000 {{빌드한 Image 파일명}}
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 예시
+```bash
+docker run -it --rm -p 3000:3000 docker-build-lab
+```
