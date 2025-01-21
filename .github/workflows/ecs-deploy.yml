@@ -58,7 +58,18 @@ jobs:
       - name: Download task definition
         run: |
           aws ecs describe-task-definition --task-definition nextjs-prod:2 \
-          --query taskDefinition > task-definition.json
+          --query 'taskDefinition.{
+            family: family,
+            executionRoleArn: executionRoleArn,
+            taskRoleArn: taskRoleArn,
+            networkMode: networkMode,
+            containerDefinitions: containerDefinitions,
+            volumes: volumes,
+            placementConstraints: placementConstraints,
+            requiresCompatibilities: requiresCompatibilities,
+            cpu: cpu,
+            memory: memory
+          }' > task-definition.json
 
       # Update task definition
       - name: Fill in the new image ID in the Amazon ECS task definition
